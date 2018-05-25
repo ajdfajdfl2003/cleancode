@@ -5,6 +5,18 @@ import org.junit.Test;
 public class GeneratePrimesBenchmarkTest {
 
     @Test
+    public void GivenMaxValue_IsOne() {
+        int[] actualPrimes = GeneratePrimes.generatePrimes(1);
+        Assert.assertArrayEquals(new int[]{}, actualPrimes);
+    }
+
+    @Test
+    public void GivenMaxValue_IsTwo() {
+        int[] actualPrimes = GeneratePrimes.generatePrimes(2);
+        Assert.assertArrayEquals(new int[]{2}, actualPrimes);
+    }
+
+    @Test
     public void GivenMaxValue_IsTen() {
         int[] actualPrimes = GeneratePrimes.generatePrimes(10);
         Assert.assertArrayEquals(new int[]{2, 3, 5, 7}, actualPrimes);
