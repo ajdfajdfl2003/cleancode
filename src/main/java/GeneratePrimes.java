@@ -10,6 +10,7 @@
 public class GeneratePrimes {
 
     private static boolean[] crossedOut;
+    private static int[] result;
 
     public static int[] generatePrimes(int maxValue) {
         if (maxValue < 2) {
@@ -19,23 +20,30 @@ public class GeneratePrimes {
         } else {
             uncrossIntegersUpTo(maxValue);
             crossOutMultiples();
+            putUncrossedIntegersIntoResult();
 
-            int i;
-            int j;
-            // how many primes are there?
-            int count = 0;
-            for (i = 0; i < crossedOut.length; i++) {
-                if (crossedOut[i])
-                    count++; // bump count.
-            }
-            int[] primes = new int[count];
-            // move the primes into the result
-            for (i = 0, j = 0; i < crossedOut.length; i++) {
-                if (crossedOut[i]) // if prime
-                    primes[j++] = i;
-            }
-            return primes; // return the primes
+            return result;
         }
+    }
+
+    private static void putUncrossedIntegersIntoResult() {
+        result = new int[numberOfUncrossedIntegers()];
+        // move the primes into the result
+        for (int i = 2, j = 0; i < crossedOut.length; i++) {
+            if (crossedOut[i]) {// if prime
+                result[j++] = i;
+            }
+        }
+    }
+
+    private static int numberOfUncrossedIntegers() {
+        // how many primes are there?
+        int count = 0;
+        for (int i = 2; i < crossedOut.length; i++) {
+            if (crossedOut[i])
+                count++; // bump count.
+        }
+        return count;
     }
 
     private static void crossOutMultiples() {
