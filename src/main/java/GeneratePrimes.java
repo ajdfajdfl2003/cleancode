@@ -9,43 +9,61 @@
 
 public class GeneratePrimes {
 
+    private static boolean[] crossedOut;
+
     public static int[] generatePrimes(int maxValue) {
         if (maxValue < 2) {
 
             return new int[0];
 
         } else {
-            // declarations
-            int s = maxValue + 1; // size of array
-            boolean[] f = new boolean[s];
+            uncrossIntegersUpTo(maxValue);
+            crossOutMultiples();
+
             int i;
-            // initialize array to true.
-            for (i = 0; i < s; i++)
-                f[i] = true;
-            // get rid of known non-primes
-            f[0] = f[1] = false;
-            // sieve
             int j;
-            for (i = 2; i < Math.sqrt(s) + 1; i++) {
-                if (f[i]) // if i is uncrossed, cross its multiples.
-                {
-                    for (j = 2 * i; j < s; j += i)
-                        f[j] = false; // multiple is not prime
-                }
-            }
             // how many primes are there?
             int count = 0;
-            for (i = 0; i < s; i++) {
-                if (f[i])
+            for (i = 0; i < crossedOut.length; i++) {
+                if (crossedOut[i])
                     count++; // bump count.
             }
             int[] primes = new int[count];
             // move the primes into the result
-            for (i = 0, j = 0; i < s; i++) {
-                if (f[i]) // if prime
+            for (i = 0, j = 0; i < crossedOut.length; i++) {
+                if (crossedOut[i]) // if prime
                     primes[j++] = i;
             }
             return primes; // return the primes
         }
+    }
+
+    private static void crossOutMultiples() {
+        int limit = determineIterationLimit();
+        for (int i = 2; i <= limit; i++) {
+            if (crossedOut[i]) // if i is uncrossed, cross its multiples.
+            {
+                crossOutMultiplesOf(i);
+            }
+        }
+    }
+
+    private static void crossOutMultiplesOf(int i) {
+        for (int j = 2 * i; j < crossedOut.length; j += i) {
+            crossedOut[j] = false; // multiple is not prime
+        }
+    }
+
+    private static int determineIterationLimit() {
+        return (int) Math.sqrt(crossedOut.length);
+    }
+
+    private static void uncrossIntegersUpTo(int maxValue) {
+        crossedOut = new boolean[maxValue + 1];
+        for (int i = 2; i < crossedOut.length; i++) {
+            crossedOut[i] = true;
+        }
+        // get rid of known non-primes
+        crossedOut[0] = crossedOut[1] = false;
     }
 }
