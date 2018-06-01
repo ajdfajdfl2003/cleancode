@@ -30,7 +30,7 @@ public class GeneratePrimes {
         result = new int[numberOfUncrossedIntegers()];
         // move the primes into the result
         for (int i = 2, j = 0; i < crossedOut.length; i++) {
-            if (crossedOut[i]) {// if prime
+            if (notCrossed(i)) {// if prime
                 result[j++] = i;
             }
         }
@@ -40,7 +40,7 @@ public class GeneratePrimes {
         // how many primes are there?
         int count = 0;
         for (int i = 2; i < crossedOut.length; i++) {
-            if (crossedOut[i])
+            if (notCrossed(i))
                 count++; // bump count.
         }
         return count;
@@ -49,16 +49,20 @@ public class GeneratePrimes {
     private static void crossOutMultiples() {
         int limit = determineIterationLimit();
         for (int i = 2; i <= limit; i++) {
-            if (crossedOut[i]) // if i is uncrossed, cross its multiples.
+            if (notCrossed(i)) // if i is uncrossed, cross its multiples.
             {
                 crossOutMultiplesOf(i);
             }
         }
     }
 
+    private static boolean notCrossed(int i) {
+        return !crossedOut[i];
+    }
+
     private static void crossOutMultiplesOf(int i) {
         for (int j = 2 * i; j < crossedOut.length; j += i) {
-            crossedOut[j] = false; // multiple is not prime
+            crossedOut[j] = true; // multiple is not prime
         }
     }
 
@@ -69,9 +73,7 @@ public class GeneratePrimes {
     private static void uncrossIntegersUpTo(int maxValue) {
         crossedOut = new boolean[maxValue + 1];
         for (int i = 2; i < crossedOut.length; i++) {
-            crossedOut[i] = true;
+            crossedOut[i] = false;
         }
-        // get rid of known non-primes
-        crossedOut[0] = crossedOut[1] = false;
     }
 }
